@@ -22,7 +22,7 @@
 # ToughSat Project
 
 import math, collections, random, sys, functools, itertools, time
-from circuit_ops import *
+from circuit_ops import *   
 
     #TODO: integrate and/or ops into clauses (unneeded?)
     #todo: find and chain adders?
@@ -78,6 +78,7 @@ def circuit_to_cnf(circuit, equals, inverses, n_a, n_b, optimize=True, variables
         if len(one_equivs) == 0: break
         cnf = set(constant_equivs(clause, one_equivs) for clause in cnf)
     cnf.update(set((i,) for i in input_constants))
+    # cnf = convert_to_3cnf(cnf)
     return set(clause for clause in cnf if len(clause) > 0), variables
 
 def convert_to_3cnf(cnf):
@@ -161,10 +162,13 @@ def generate_instance(target, n_a, n_b, a=0, b=0, includefactors=False):
     equals.extend(zip(target_bits + ('zero',)*(len(z)-len(target_bits)),z))
     #print("constructed circuit")
     #return {'circuit':circuit, 'equals': equals, 'inverses':inverses, 'n_a':n_a, 'n_b':n_b}
+    # return circuit_to_cnf(circuit, equals, inverses, n_a, n_b)
     return cnf_to_dimacs(circuit_to_cnf(circuit, equals, inverses, n_a, n_b)[0] , n_a, n_b, target, a, b, includefactors)
 
 def t(a,b,nm):
     c = generate_instance_known_factors(a,b)
+    print(c)
+    print(type(c))
     cnf, var = circuit_to_cnf(**c)
     open(str(nm)+'.dimacs', 'w').write(cnf_to_dimacs(cnf, c['n_a'], c['n_b'], var))
 
