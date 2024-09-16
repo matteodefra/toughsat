@@ -97,7 +97,7 @@ def test():
 	outputs.append(output)
 
 	outputs = header + "".join(outputs)
-	print outputs
+	print(outputs)
 
 
 
